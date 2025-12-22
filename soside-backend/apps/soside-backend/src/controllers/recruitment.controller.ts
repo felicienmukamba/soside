@@ -37,10 +37,10 @@ export class RecruitmentController {
         return this.recruitmentClient.send('remove_job_post', id);
     }
 
-    @Post('apply')
+    @Post('jobs/:jobId/apply')
     @ApiOperation({ summary: 'Apply for a job' })
-    apply(@Body() data: any) {
-        return this.recruitmentClient.send('create_application', data);
+    apply(@Param('jobId') jobId: string, @Body() data: any) {
+        return this.recruitmentClient.send('create_application', { jobId, ...data });
     }
 
     @Get('jobs/:jobId/applications')

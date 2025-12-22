@@ -15,38 +15,53 @@ import {
     TrendingUp,
 } from "lucide-react"
 
-const stats = [
-    {
-        title: "Projets Actifs",
-        value: "12",
-        description: "+2 ce mois-ci",
-        icon: Briefcase,
-        color: "text-blue-600",
-    },
-    {
-        title: "Étudiants",
-        value: "1,234",
-        description: "+18% vs mois dernier",
-        icon: Users,
-        color: "text-green-600",
-    },
-    {
-        title: "Formations",
-        value: "24",
-        description: "4 nouvelles ce mois",
-        icon: BookOpen,
-        color: "text-purple-600",
-    },
-    {
-        title: "Revenu (Est.)",
-        value: "$15.4k",
-        description: "+12.5% vs mois dernier",
-        icon: DollarSign,
-        color: "text-emerald-600",
-    },
-]
+import { statsService, DashboardStats } from "@/services/statsService"
+import * as React from "react"
 
 export default function AdminDashboard() {
+    const [statsData, setStatsData] = React.useState<DashboardStats | null>(null)
+    const [loading, setLoading] = React.useState(true)
+
+    React.useEffect(() => {
+        const fetchStats = async () => {
+            const data = await statsService.getDashboardStats()
+            setStatsData(data)
+            setLoading(false)
+        }
+        fetchStats()
+    }, [])
+
+    const statCards = [
+        {
+            title: "Projets Actifs",
+            value: statsData?.activeProjects.toString() || "0",
+            description: "+2 ce mois-ci",
+            icon: Briefcase,
+            color: "text-blue-600",
+        },
+        {
+            title: "Étudiants",
+            value: statsData?.totalStudents.toLocaleString() || "0",
+            description: "+18% vs mois dernier",
+            icon: Users,
+            color: "text-green-600",
+        },
+        {
+            title: "Formations",
+            value: statsData?.totalCourses.toString() || "0",
+            description: "4 nouvelles ce mois",
+            icon: BookOpen,
+            color: "text-purple-600",
+        },
+        {
+            title: "Offres d'Emploi",
+            value: statsData?.jobOffers.toString() || "0",
+            description: "Opportunités SOSIDE",
+            icon: DollarSign,
+            color: "text-emerald-600",
+        },
+    ]
+
     return (
         <div className="flex flex-col gap-8">
             <div>
@@ -57,7 +72,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {stats.map((stat) => (
+                {statCards.map((stat) => (
                     <Card key={stat.title} className="shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">
@@ -66,7 +81,9 @@ export default function AdminDashboard() {
                             <stat.icon className={`h-4 w-4 ${stat.color}`} />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-zinc-900">{stat.value}</div>
+                            <div className="text-2xl font-bold text-zinc-900">
+                                {loading ? "..." : stat.value}
+                            </div>
                             <p className="text-xs text-muted-foreground">
                                 {stat.description}
                             </p>

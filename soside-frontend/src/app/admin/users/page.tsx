@@ -66,6 +66,17 @@ export default function adminUsersPage() {
         }
     }
 
+    const handleDelete = async (id: string) => {
+        if (confirm("Supprimer cet utilisateur ?")) {
+            try {
+                await userService.deleteUser(id)
+                loadUsers()
+            } catch (error) {
+                console.error("Delete failed", error)
+            }
+        }
+    }
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
@@ -136,7 +147,7 @@ export default function adminUsersPage() {
                                                 <DropdownMenuItem onClick={() => handleUpdateRole(user.id, 'developer')}>Développeur</DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleUpdateRole(user.id, 'student')}>Étudiant</DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                <DropdownMenuItem className="text-destructive">
+                                                <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(user.id)}>
                                                     <Trash2 className="mr-2 size-4" /> Supprimer
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>

@@ -15,6 +15,16 @@ export const recruitmentService = {
         return response.data;
     },
 
+    getJobById: async (id: string): Promise<JobOffer> => {
+        const response = await api.get(`/recruitment/jobs/${id}`);
+        return response.data;
+    },
+
+    getApplications: async (jobId: string): Promise<any[]> => {
+        const response = await api.get(`/recruitment/jobs/${jobId}/applications`);
+        return response.data;
+    },
+
     createJob: async (job: Omit<JobOffer, 'id'>): Promise<JobOffer> => {
         const response = await api.post('/recruitment/jobs', job);
         return response.data;
@@ -30,6 +40,7 @@ export const recruitmentService = {
     },
 
     apply: async (jobId: string, data: any): Promise<void> => {
-        await api.post(`/recruitment/jobs/${jobId}/apply`, data);
+        const response = await api.post(`/recruitment/jobs/${jobId}/apply`, data);
+        return response.data;
     }
 };

@@ -11,6 +11,8 @@ import {
     UserPlus,
     Settings,
     ShieldCheck,
+    Bot,
+    Activity,
 } from "lucide-react"
 
 import {
@@ -62,12 +64,22 @@ const data = {
             url: "/admin/recruitment",
             icon: UserPlus,
         },
+        {
+            title: "Intelligence Artificielle",
+            url: "/admin/ai",
+            icon: Bot,
+        },
     ],
     management: [
         {
             title: "Utilisateurs",
             url: "/admin/users",
             icon: Users,
+        },
+        {
+            title: "Santé du Système",
+            url: "/admin/health",
+            icon: Activity,
         },
         {
             title: "Rôles & Permissions",

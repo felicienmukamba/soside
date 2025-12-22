@@ -32,6 +32,11 @@ export const projectService = {
         return response.data;
     },
 
+    getByRegion: async (region: string): Promise<Project[]> => {
+        const response = await api.get(`/projects/region/${region}`);
+        return response.data;
+    },
+
     create: async (project: Omit<Project, 'id'>): Promise<Project> => {
         const response = await api.post('/projects', project);
         return response.data;

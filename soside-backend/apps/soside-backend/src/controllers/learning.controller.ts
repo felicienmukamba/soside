@@ -42,4 +42,10 @@ export class LearningController {
     enroll(@Body() data: { studentId: string; courseId: string }) {
         return this.learningClient.send('enroll_student', data);
     }
+
+    @Get('enrollments')
+    @ApiOperation({ summary: 'Get all enrollments' })
+    findEnrollments() {
+        return this.learningClient.send('find_all_enrollments', {});
+    }
 }

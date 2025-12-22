@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Inject, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Inject, Param, Delete, Patch } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
@@ -36,5 +36,17 @@ export class BlogServiceController {
     @ApiOperation({ summary: 'Get post by ID' })
     findOne(@Param('id') id: string) {
         return this.blogClient.send('find_post_by_id', id);
+    }
+
+    @Patch(':id')
+    @ApiOperation({ summary: 'Update a blog post' })
+    update(@Param('id') id: string, @Body() updatePostDto: Partial<CreatePostDto>) {
+        return this.blogClient.send('update_post', { id, postData: updatePostDto });
+    }
+
+    @Delete(':id')
+    @ApiOperation({ summary: 'Delete a blog post' })
+    remove(@Param('id') id: string) {
+        return this.blogClient.send('remove_post', id);
     }
 }

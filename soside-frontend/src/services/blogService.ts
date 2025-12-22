@@ -18,6 +18,11 @@ export const blogService = {
         return response.data;
     },
 
+    getPostsByCategory: async (category: string): Promise<BlogPost[]> => {
+        const response = await api.get(`/blog/category/${category}`);
+        return response.data;
+    },
+
     createPost: async (post: Partial<BlogPost>): Promise<BlogPost> => {
         const response = await api.post('/blog', post);
         return response.data;

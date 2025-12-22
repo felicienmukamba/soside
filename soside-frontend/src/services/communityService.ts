@@ -37,9 +37,23 @@ export const communityService = {
         await api.delete(`/community/chapters/${id}`);
     },
 
-    getEvents: async (): Promise<Event[]> => {
-        const response = await api.get('/community/events');
+    getEventsByChapter: async (chapterId: string): Promise<Event[]> => {
+        const response = await api.get(`/community/chapters/${chapterId}/events`);
         return response.data;
+    },
+
+    createEvent: async (event: Omit<Event, 'id'>): Promise<Event> => {
+        const response = await api.post('/community/events', event);
+        return response.data;
+    },
+
+    updateEvent: async (id: string, event: Partial<Event>): Promise<Event> => {
+        const response = await api.patch(`/community/events/${id}`, event);
+        return response.data;
+    },
+
+    deleteEvent: async (id: string): Promise<void> => {
+        await api.delete(`/community/events/${id}`);
     },
 
     joinChapter: async (id: string): Promise<void> => {

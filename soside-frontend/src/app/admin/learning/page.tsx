@@ -51,7 +51,7 @@ export default function adminLearningPage() {
     const [courses, setCourses] = React.useState<Course[]>([])
     const [loading, setLoading] = React.useState(true)
     const [isDialogOpen, setIsDialogOpen] = React.useState(false)
-    const [currentCourse, setCurrentCourse] = React.useState<Partial<Course> | null>(null)
+    const [currentCourse, setCurrentCourse] = React.useState<Partial<Course>>({})
 
     const loadCourses = React.useCallback(async () => {
         setLoading(true)
@@ -74,11 +74,13 @@ export default function adminLearningPage() {
         if (!currentCourse?.title) return
 
         try {
-            // Note: We need to update learningService with create/update/delete as well if not already done
-            // For now using alert to simulate
-            console.log("Saving course", currentCourse)
+            if (currentCourse.id) {
+                await learningService.updateCourse(currentCourse.id, currentCourse)
+            } else {
+                await learningService.createCourse(currentCourse as any)
+            }
             setIsDialogOpen(false)
-            setCurrentCourse(null)
+            setCurrentCourse({})
             loadCourses()
         } catch (error) {
             console.error("Operation failed", error)
@@ -87,10 +89,17 @@ export default function adminLearningPage() {
 
     const handleDelete = async (id: string) => {
         if (confirm("Supprimer cette formation ?")) {
-            console.log("Deleting course", id)
-            loadCourses()
+            try {
+                await learningService.deleteCourse(id)
+                loadCourses()
+            } catch (error) {
+                console.error("Delete failed", error)
+            }
         }
     }
+
+    const levels = ["Débutant", "Intermédiaire", "Avancé", "Expert"]
+    const categories = ["Développement", "Design", "Business", "Marketing"]
 
     return (
         <div className="flex flex-col gap-6">
@@ -108,20 +117,74 @@ export default function adminLearningPage() {
                             Nouveau Cours
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
-                        {/* Form content similar to projects but for courses */}
+                    <DialogContent className="max-w-2xl">
                         <DialogHeader>
-                            <DialogTitle>Nouveau Cours</DialogTitle>
+                            <DialogTitle>{currentCourse?.id ? "Modifier le Cours" : "Nouveau Cours"}</DialogTitle>
+                            <DialogDescription>
+                                Remplissez les informations ci-dessous pour gérer votre formation.
+                            </DialogDescription>
                         </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="title" className="text-right">Titre</Label>
-                                <Input id="title" className="col-span-3" />
+                        <form onSubmit={handleCreateOrUpdate} className="grid gap-4 py-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="title">Titre</Label>
+                                    <Input
+                                        id="title"
+                                        value={currentCourse?.title || ""}
+                                        onChange={(e) => setCurrentCourse({ ...currentCourse, title: e.target.value })}
+                                        placeholder="Ex: Formation Next.js Avancé"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="duration">Durée</Label>
+                                    <Input
+                                        id="duration"
+                                        value={currentCourse?.duration || ""}
+                                        onChange={(e) => setCurrentCourse({ ...currentCourse, duration: e.target.value })}
+                                        placeholder="Ex: 8 heures"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <DialogFooter>
-                            <Button onClick={() => setIsDialogOpen(false)}>Enregistrer</Button>
-                        </DialogFooter>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="level">Niveau</Label>
+                                    <select
+                                        id="level"
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        value={currentCourse?.level || ""}
+                                        onChange={(e) => setCurrentCourse({ ...currentCourse, level: e.target.value })}
+                                    >
+                                        <option value="">Sélectionner</option>
+                                        {levels.map(l => <option key={l} value={l}>{l}</option>)}
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="category">Catégorie</Label>
+                                    <select
+                                        id="category"
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        value={currentCourse?.category || ""}
+                                        onChange={(e) => setCurrentCourse({ ...currentCourse, category: e.target.value })}
+                                    >
+                                        <option value="">Sélectionner</option>
+                                        {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="description">Description</Label>
+                                <textarea
+                                    id="description"
+                                    className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    value={currentCourse?.description || ""}
+                                    onChange={(e) => setCurrentCourse({ ...currentCourse, description: e.target.value })}
+                                    placeholder="Décrivez le contenu du cours..."
+                                />
+                            </div>
+                            <DialogFooter>
+                                <Button type="submit">Enregistrer</Button>
+                            </DialogFooter>
+                        </form>
                     </DialogContent>
                 </Dialog>
             </div>
@@ -134,12 +197,16 @@ export default function adminLearningPage() {
                                 <TableHead>Titre du cours</TableHead>
                                 <TableHead>Niveau</TableHead>
                                 <TableHead>Durée</TableHead>
-                                <TableHead>Inscrits</TableHead>
+                                <TableHead>Catégorie</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {courses.map((course) => (
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="h-24 text-center">Chargement...</TableCell>
+                                </TableRow>
+                            ) : courses.map((course) => (
                                 <TableRow key={course.id}>
                                     <TableCell className="font-medium flex items-center gap-2">
                                         <BookOpen className="size-4 text-purple-600" />
@@ -149,7 +216,7 @@ export default function adminLearningPage() {
                                         <Badge variant="secondary">{course.level}</Badge>
                                     </TableCell>
                                     <TableCell>{course.duration}</TableCell>
-                                    <TableCell>0</TableCell>
+                                    <TableCell>{course.category}</TableCell>
                                     <TableCell className="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -170,6 +237,13 @@ export default function adminLearningPage() {
                                     </TableCell>
                                 </TableRow>
                             ))}
+                            {!loading && courses.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="h-24 text-center text-muted-foreground lowercase">
+                                        Aucun cours trouvé.
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>
