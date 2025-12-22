@@ -1,0 +1,77 @@
+.page {
+    padding-bottom: 100px;
+    background: var(--background);
+}
+
+.hero {
+    padding: 160px 0 100px;
+    background: linear-gradient(180deg, var(--background-alt) 0%, var(--background) 100%);
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 56px;
+    font-weight: 800;
+    margin-bottom: 24px;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-top: 60px;
+}
+
+.sectionHeader h2 {
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.loading,
+.empty {
+    text-align: center;
+    padding: 80px 0;
+    color: var(--text-muted);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--surface-border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 36px;
+    }
+}

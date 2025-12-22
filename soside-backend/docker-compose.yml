@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: soside-postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: soside_user
+      POSTGRES_PASSWORD: soside_password
+      POSTGRES_DB: soside_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - soside-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: soside-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - soside-network
+
+networks:
+  soside-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

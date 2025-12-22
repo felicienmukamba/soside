@@ -1,0 +1,180 @@
+version: "3.8"
+
+services:
+  # Infrastructure
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: soside-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-soside_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-soside_password}
+      POSTGRES_DB: ${POSTGRES_DB:-soside_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - soside-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: soside-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - soside-network
+
+  # Backend Services
+  auth-service:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: auth-service
+    environment:
+      - DATABASE_URL=postgres://soside_user:soside_password@postgres:5432/soside_db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=${JWT_SECRET:-super-secret-key}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soside-network
+
+  blog-service:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: blog-service
+    environment:
+      - DATABASE_URL=postgres://soside_user:soside_password@postgres:5432/soside_db
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soside-network
+
+  project-service:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: project-service
+    environment:
+      - DATABASE_URL=postgres://soside_user:soside_password@postgres:5432/soside_db
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soside-network
+
+  learning-service:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: learning-service
+    environment:
+      - DATABASE_URL=postgres://soside_user:soside_password@postgres:5432/soside_db
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soside-network
+
+  community-service:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: community-service
+    environment:
+      - DATABASE_URL=postgres://soside_user:soside_password@postgres:5432/soside_db
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soside-network
+
+  ai-service:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: ai-service
+    environment:
+      - DATABASE_URL=postgres://soside_user:soside_password@postgres:5432/soside_db
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soside-network
+
+  recruitment-service:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: recruitment-service
+    environment:
+      - DATABASE_URL=postgres://soside_user:soside_password@postgres:5432/soside_db
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - soside-network
+
+  api-gateway:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: soside-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - auth-service
+      - blog-service
+      - project-service
+      - learning-service
+      - community-service
+      - ai-service
+      - recruitment-service
+    networks:
+      - soside-network
+
+  # Frontend
+  frontend:
+    build:
+      context: ./soside-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:3001"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3000/api
+    depends_on:
+      - api-gateway
+    networks:
+      - soside-network
+
+networks:
+  soside-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

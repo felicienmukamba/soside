@@ -1,0 +1,7 @@
+.page {
+    padding-top: 80px;
+    /* Navbar height */
+    height: 100vh;
+    background: var(--background);
+    overflow: hidden;
+}
