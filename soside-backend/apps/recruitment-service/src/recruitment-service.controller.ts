@@ -27,7 +27,7 @@ export class RecruitmentServiceController {
   }
 
   @MessagePattern('update_application_status')
-  updateApplicationStatus(@Payload() data: { id: string; status: string }) {
+  updateApplicationStatus(@Payload() data: { id: string; status: any }) {
     return this.recruitmentService.updateApplicationStatus(data.id, data.status);
   }
 
@@ -49,5 +49,15 @@ export class RecruitmentServiceController {
   @MessagePattern('get_developer_skills')
   getDeveloperSkills(@Payload() developerId: string) {
     return this.recruitmentService.getDeveloperSkills(developerId);
+  }
+
+  @MessagePattern('update_job_post')
+  updateJobPost(@Payload() data: { id: string; jobData: any }) {
+    return this.recruitmentService.updateJobPost(data.id, data.jobData);
+  }
+
+  @MessagePattern('remove_job_post')
+  removeJobPost(@Payload() id: string) {
+    return this.recruitmentService.deleteJobPost(id);
   }
 }

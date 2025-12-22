@@ -180,4 +180,17 @@ export class AuthServiceService {
 
     return jwt.sign(payload, this.JWT_SECRET, { expiresIn: '7d' });
   }
+
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find({ relations: ['profile'] });
+  }
+
+  async updateRole(id: string, role: any): Promise<User | null> {
+    await this.userRepository.update(id, { role });
+    return this.getUserById(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.userRepository.delete(id);
+  }
 }

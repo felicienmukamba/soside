@@ -1,16 +1,16 @@
 {
-  "name": "soside-application",
+  "name": "soside-monorepo",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "SOSIDE Platform - Consolidated Repository",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:backend": "cd soside-backend && npm run start:dev",
+    "dev:frontend": "cd soside-frontend && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down",
+    "install:all": "npm install && cd soside-backend && npm install && cd ../soside-frontend && npm install"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^8.2.2"
   }
 }

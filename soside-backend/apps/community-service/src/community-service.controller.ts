@@ -45,4 +45,24 @@ export class CommunityServiceController {
   getMessagesByChannel(@Payload() data: { channelId: string; limit?: number }) {
     return this.communityService.getMessagesByChannel(data.channelId, data.limit);
   }
+
+  @MessagePattern('update_chapter')
+  updateChapter(@Payload() data: { id: string; chapterData: any }) {
+    return this.communityService.updateChapter(data.id, data.chapterData);
+  }
+
+  @MessagePattern('remove_chapter')
+  removeChapter(@Payload() id: string) {
+    return this.communityService.deleteChapter(id);
+  }
+
+  @MessagePattern('update_event')
+  updateEvent(@Payload() data: { id: string; eventData: any }) {
+    return this.communityService.updateEvent(data.id, data.eventData);
+  }
+
+  @MessagePattern('remove_event')
+  removeEvent(@Payload() id: string) {
+    return this.communityService.deleteEvent(id);
+  }
 }

@@ -1,0 +1,44 @@
+name: SOSIDE CI/CD
+
+on:
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main]
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+
+        services:
+            redis:
+                image: redis:7-alpine
+                ports:
+                    - 6379:6379
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Use Node.js 20.x
+              uses: actions/setup-node@v4
+              with:
+                  node-node: 20
+                  cache: "npm"
+
+            - name: Install Monorepo Dependencies
+              run: npm install
+
+            - name: Build Backend
+              run: |
+                  cd soside-backend
+                  npm install
+                  npm run build
+
+            - name: Build Frontend
+              run: |
+                  cd soside-frontend
+                  npm install
+                  npm run build
+
+            - name: Docker Build Test
+              run: docker-compose build

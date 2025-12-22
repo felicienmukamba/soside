@@ -30,5 +30,19 @@ export const projectService = {
     getByCategory: async (category: string): Promise<Project[]> => {
         const response = await api.get(`/projects?category=${category}`);
         return response.data;
+    },
+
+    create: async (project: Omit<Project, 'id'>): Promise<Project> => {
+        const response = await api.post('/projects', project);
+        return response.data;
+    },
+
+    update: async (id: string, project: Partial<Project>): Promise<Project> => {
+        const response = await api.patch(`/projects/${id}`, project);
+        return response.data;
+    },
+
+    delete: async (id: string): Promise<void> => {
+        await api.delete(`/projects/${id}`);
     }
 };

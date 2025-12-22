@@ -61,4 +61,13 @@ export class RecruitmentServiceService {
   async getDeveloperSkills(developerId: string): Promise<DeveloperSkill[]> {
     return this.skillRepository.find({ where: { developerId } });
   }
+
+  async updateJobPost(id: string, data: any): Promise<JobPost | null> {
+    await this.jobPostRepository.update(id, data);
+    return this.findJobPostById(id);
+  }
+
+  async deleteJobPost(id: string): Promise<void> {
+    await this.jobPostRepository.delete(id);
+  }
 }

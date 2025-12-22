@@ -62,4 +62,22 @@ export class CommunityServiceService {
       take: limit,
     });
   }
+
+  async updateChapter(id: string, data: any): Promise<Chapter | null> {
+    await this.chapterRepository.update(id, data);
+    return this.chapterRepository.findOne({ where: { id } });
+  }
+
+  async deleteChapter(id: string): Promise<void> {
+    await this.chapterRepository.delete(id);
+  }
+
+  async updateEvent(id: string, data: any): Promise<Event | null> {
+    await this.eventRepository.update(id, data);
+    return this.eventRepository.findOne({ where: { id } });
+  }
+
+  async deleteEvent(id: string): Promise<void> {
+    await this.eventRepository.delete(id);
+  }
 }

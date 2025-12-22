@@ -31,6 +31,20 @@ export const learningService = {
         return response.data;
     },
 
+    createCourse: async (course: Omit<Course, 'id'>): Promise<Course> => {
+        const response = await api.post('/learning/courses', course);
+        return response.data;
+    },
+
+    updateCourse: async (id: string, course: Partial<Course>): Promise<Course> => {
+        const response = await api.patch(`/learning/courses/${id}`, course);
+        return response.data;
+    },
+
+    deleteCourse: async (id: string): Promise<void> => {
+        await api.delete(`/learning/courses/${id}`);
+    },
+
     getCourseDetails: async (id: string): Promise<Course> => {
         const response = await api.get(`/learning/courses/${id}`);
         return response.data;

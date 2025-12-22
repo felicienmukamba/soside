@@ -55,4 +55,19 @@ export class AuthServiceController {
   login2fa(@Payload() data: { userId: string; code: string }) {
     return this.authService.loginTwoFactor(data.userId, data.code);
   }
+
+  @MessagePattern('find_all_users')
+  findAll() {
+    return this.authService.findAll();
+  }
+
+  @MessagePattern('update_user_role')
+  updateRole(@Payload() data: { id: string; role: string }) {
+    return this.authService.updateRole(data.id, data.role);
+  }
+
+  @MessagePattern('remove_user')
+  remove(@Payload() id: string) {
+    return this.authService.remove(id);
+  }
 }

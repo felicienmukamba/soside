@@ -25,8 +25,8 @@ export class LearningServiceService {
 
   // Course operations
   async createCourse(data: any): Promise<Course> {
-    const course = this.courseRepository.create(data);
-    return this.courseRepository.save(course);
+    const course = this.courseRepository.create(data as object);
+    return this.courseRepository.save(course as Course);
   }
 
   async findAllCourses(): Promise<Course[]> {
@@ -50,7 +50,9 @@ export class LearningServiceService {
     await this.enrollmentRepository.update(enrollmentId, { progressPercentage });
     const enrollment = await this.enrollmentRepository.findOne({ where: { id: enrollmentId } });
 
-    if (progressPercentage >= 100 && enrollment) {
+    if (!enrollment) throw new Error('Enrollment not found');
+
+    if (progressPercentage >= 100) {
       enrollment.completedAt = new Date();
       await this.enrollmentRepository.save(enrollment);
       await this.generateCertificate(enrollmentId);
@@ -82,5 +84,14 @@ export class LearningServiceService {
       where: { uniqueCode },
       relations: ['enrollment', 'enrollment.course']
     });
+  }
+
+  async updateCourse(id: string, data: any): Promise<Course | null> {
+    await this.courseRepository.update(id, data);
+    return this.findCourseById(id);
+  }
+
+  async deleteCourse(id: string): Promise<void> {
+    await this.courseRepository.delete(id);
   }
 }

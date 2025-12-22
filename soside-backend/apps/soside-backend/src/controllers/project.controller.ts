@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Inject, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Inject, Param, Patch, Delete } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 // We should ideally share DTOs via a shared library (libs), but for now duplicate or define locally
@@ -42,5 +42,17 @@ export class ProjectServiceController {
     @ApiOperation({ summary: 'Get projects by region' })
     findByRegion(@Param('region') region: string) {
         return this.projectClient.send('find_projects_by_region', region);
+    }
+
+    @Patch(':id')
+    @ApiOperation({ summary: 'Update a project' })
+    update(@Param('id') id: string, @Body() updateProjectDto: Partial<CreateProjectDto>) {
+        return this.projectClient.send('update_project', { id, updateProjectDto });
+    }
+
+    @Delete(':id')
+    @ApiOperation({ summary: 'Delete a project' })
+    remove(@Param('id') id: string) {
+        return this.projectClient.send('remove_project', id);
     }
 }

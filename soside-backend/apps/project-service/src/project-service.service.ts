@@ -101,4 +101,19 @@ export class ProjectServiceService {
   async deleteMedia(id: string): Promise<void> {
     await this.mediaRepository.delete(id);
   }
+
+  async update(id: string, updateData: Partial<CreateProjectDto>): Promise<Project | null> {
+    await this.projectRepository.update(id, {
+      title: updateData.title,
+      description: updateData.description,
+      techStack: updateData.techStack,
+      imageUrl: updateData.imageUrl,
+      region: updateData.region,
+    });
+    return this.findOne(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.projectRepository.delete(id);
+  }
 }

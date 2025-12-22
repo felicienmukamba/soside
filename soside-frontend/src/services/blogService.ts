@@ -18,6 +18,20 @@ export const blogService = {
         return response.data;
     },
 
+    createPost: async (post: Partial<BlogPost>): Promise<BlogPost> => {
+        const response = await api.post('/blog', post);
+        return response.data;
+    },
+
+    updatePost: async (id: string, post: Partial<BlogPost>): Promise<BlogPost> => {
+        const response = await api.patch(`/blog/${id}`, post);
+        return response.data;
+    },
+
+    deletePost: async (id: string): Promise<void> => {
+        await api.delete(`/blog/${id}`);
+    },
+
     getPostBySlug: async (slug: string): Promise<BlogPost> => {
         const response = await api.get(`/blog/${slug}`);
         return response.data;

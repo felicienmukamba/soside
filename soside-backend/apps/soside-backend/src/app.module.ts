@@ -4,6 +4,11 @@ import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ProjectServiceController } from './controllers/project.controller';
 import { BlogServiceController } from './controllers/blog.controller';
+import { LearningController } from './controllers/learning.controller';
+import { CommunityController } from './controllers/community.controller';
+import { RecruitmentController } from './controllers/recruitment.controller';
+import { UserController } from './controllers/user.controller';
+import { AIController } from './controllers/ai.controller';
 
 @Module({
   imports: [
@@ -66,7 +71,16 @@ import { BlogServiceController } from './controllers/blog.controller';
       },
     ]),
   ],
-  controllers: [AppController, ProjectServiceController, BlogServiceController],
+  controllers: [
+    AppController,
+    ProjectServiceController,
+    BlogServiceController,
+    LearningController,
+    CommunityController,
+    RecruitmentController,
+    UserController,
+    AIController,
+  ],
   providers: [AppService],
 })
 export class AppModule { }

@@ -40,4 +40,14 @@ export class LearningServiceController {
   getCertificateByCode(@Payload() uniqueCode: string) {
     return this.learningService.getCertificateByCode(uniqueCode);
   }
+
+  @MessagePattern('update_course')
+  updateCourse(@Payload() data: { id: string; courseData: any }) {
+    return this.learningService.updateCourse(data.id, data.courseData);
+  }
+
+  @MessagePattern('remove_course')
+  removeCourse(@Payload() id: string) {
+    return this.learningService.deleteCourse(id);
+  }
 }

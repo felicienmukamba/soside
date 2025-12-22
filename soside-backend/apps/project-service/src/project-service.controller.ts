@@ -46,4 +46,14 @@ export class ProjectServiceController {
   deleteMedia(@Payload() id: string) {
     return this.projectService.deleteMedia(id);
   }
+
+  @MessagePattern('update_project')
+  update(@Payload() data: { id: string; updateProjectDto: Partial<CreateProjectDto> }) {
+    return this.projectService.update(data.id, data.updateProjectDto);
+  }
+
+  @MessagePattern('remove_project')
+  remove(@Payload() id: string) {
+    return this.projectService.remove(id);
+  }
 }
