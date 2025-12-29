@@ -58,5 +58,10 @@ export const communityService = {
 
     joinChapter: async (id: string): Promise<void> => {
         await api.post(`/community/chapters/${id}/join`);
+    },
+
+    getEvents: async (): Promise<Event[]> => {
+        const response = await api.get('/community/events');
+        return response.data;
     }
 };

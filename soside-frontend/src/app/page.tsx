@@ -1,13 +1,19 @@
-import Hero from "@/components/corporate/Hero";
-import Services from "@/components/corporate/Services";
-import PresenceMap from "@/components/corporate/PresenceMap";
+import HeroImproved from "@/components/corporate/HeroImproved";
+import ServicesImproved from "@/components/corporate/ServicesImproved";
+import PresenceMapImproved from "@/components/corporate/PresenceMapImproved";
+import StatsCounter from "@/components/corporate/StatsCounter";
+import Testimonials from "@/components/corporate/Testimonials";
+import FAQ from "@/components/corporate/FAQ";
 
 export default function Home() {
   return (
     <div className="home-page">
-      <Hero />
-      <Services />
-      <PresenceMap />
+      <HeroImproved />
+      <ServicesImproved />
+      <StatsCounter />
+      <PresenceMapImproved />
+      <Testimonials />
+      <FAQ />
     </div>
   );
 }

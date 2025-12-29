@@ -7,9 +7,12 @@ export interface BlogPost {
     content: string;
     category: string;
     authorId: string;
-    authorName: string;
+    authorName?: string;
+    author?: string;
     publishedAt: string;
     coverImage?: string;
+    readTime?: number;
+    tags?: string[];
 }
 
 export const blogService = {
@@ -39,6 +42,11 @@ export const blogService = {
 
     getPostBySlug: async (slug: string): Promise<BlogPost> => {
         const response = await api.get(`/blog/${slug}`);
+        return response.data;
+    },
+
+    getPost: async (id: string): Promise<BlogPost> => {
+        const response = await api.get(`/blog/${id}`);
         return response.data;
     }
 };
