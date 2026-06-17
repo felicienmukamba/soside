@@ -12,6 +12,7 @@
     "check": "npm run type-check && npm run lint"
   },
   "dependencies": {
+    "@google/genai": "^2.8.0",
     "@livekit/components-react": "^2.9.17",
     "@livekit/components-styles": "^1.2.0",
     "@radix-ui/react-avatar": "^1.1.11",

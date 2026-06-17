@@ -4,6 +4,7 @@ import { AiServiceService } from './ai-service.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AIPromptLog } from './ai-prompt-log.entity';
 import { AutomationWorkflow } from './automation-workflow.entity';
+import { AgentSkill } from './agent-skill.entity';
 
 @Module({
   imports: [
@@ -14,10 +15,10 @@ import { AutomationWorkflow } from './automation-workflow.entity';
       username: process.env.DB_USER || 'soside_user',
       password: process.env.DB_PASSWORD || 'soside_password',
       database: process.env.DB_NAME || 'soside_db',
-      entities: [AIPromptLog, AutomationWorkflow],
+      entities: [AIPromptLog, AutomationWorkflow, AgentSkill],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([AIPromptLog, AutomationWorkflow]),
+    TypeOrmModule.forFeature([AIPromptLog, AutomationWorkflow, AgentSkill]),
   ],
   controllers: [AiServiceController],
   providers: [AiServiceService],

@@ -3,20 +3,33 @@ import { AiServiceController } from './ai-service.controller';
 import { AiServiceService } from './ai-service.service';
 
 describe('AiServiceController', () => {
-  let aiServiceController: AiServiceController;
+  let controller: AiServiceController;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const mockService = {
+      executeAgentTask: jest.fn(),
+      logPrompt: jest.fn(),
+      getPromptHistory: jest.fn(),
+      createWorkflow: jest.fn(),
+      findAllWorkflows: jest.fn(),
+      triggerWorkflow: jest.fn(),
+      toggleWorkflowStatus: jest.fn(),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [AiServiceController],
-      providers: [AiServiceService],
+      providers: [
+        {
+          provide: AiServiceService,
+          useValue: mockService,
+        },
+      ],
     }).compile();
 
-    aiServiceController = app.get<AiServiceController>(AiServiceController);
+    controller = module.get<AiServiceController>(AiServiceController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(aiServiceController.getHello()).toBe('Hello World!');
-    });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
   });
 });

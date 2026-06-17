@@ -3,20 +3,28 @@ import { CommunityServiceController } from './community-service.controller';
 import { CommunityServiceService } from './community-service.service';
 
 describe('CommunityServiceController', () => {
-  let communityServiceController: CommunityServiceController;
+  let controller: CommunityServiceController;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const mockService = {
+      createChapter: jest.fn(),
+      findAllChapters: jest.fn(),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [CommunityServiceController],
-      providers: [CommunityServiceService],
+      providers: [
+        {
+          provide: CommunityServiceService,
+          useValue: mockService,
+        },
+      ],
     }).compile();
 
-    communityServiceController = app.get<CommunityServiceController>(CommunityServiceController);
+    controller = module.get<CommunityServiceController>(CommunityServiceController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(communityServiceController.getHello()).toBe('Hello World!');
-    });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
   });
 });

@@ -3,20 +3,28 @@ import { RecruitmentServiceController } from './recruitment-service.controller';
 import { RecruitmentServiceService } from './recruitment-service.service';
 
 describe('RecruitmentServiceController', () => {
-  let recruitmentServiceController: RecruitmentServiceController;
+  let controller: RecruitmentServiceController;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const mockService = {
+      createJobPost: jest.fn(),
+      findAllJobPosts: jest.fn(),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [RecruitmentServiceController],
-      providers: [RecruitmentServiceService],
+      providers: [
+        {
+          provide: RecruitmentServiceService,
+          useValue: mockService,
+        },
+      ],
     }).compile();
 
-    recruitmentServiceController = app.get<RecruitmentServiceController>(RecruitmentServiceController);
+    controller = module.get<RecruitmentServiceController>(RecruitmentServiceController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(recruitmentServiceController.getHello()).toBe('Hello World!');
-    });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
   });
 });

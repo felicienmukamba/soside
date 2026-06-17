@@ -35,4 +35,9 @@ export class AiServiceController {
   toggleWorkflowStatus(@Payload() data: { id: string; isActive: boolean }) {
     return this.aiService.toggleWorkflowStatus(data.id, data.isActive);
   }
+
+  @MessagePattern('execute_agent_task')
+  executeAgentTask(@Payload() data: { userId: string; prompt: string }) {
+    return this.aiService.executeAgentTask(data.userId, data.prompt);
+  }
 }

@@ -6,6 +6,7 @@ import { Chapter } from './chapter.entity';
 import { Event } from './event.entity';
 import { Channel } from './channel.entity';
 import { Message } from './message.entity';
+import { CommunityGateway } from './community.gateway';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { Message } from './message.entity';
     TypeOrmModule.forFeature([Chapter, Event, Channel, Message]),
   ],
   controllers: [CommunityServiceController],
-  providers: [CommunityServiceService],
+  providers: [CommunityServiceService, CommunityGateway],
 })
 export class CommunityServiceModule { }
