@@ -1,0 +1,31 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "soside-backend": {
+      "root": "soside-backend",
+      "runtime": "container"
+    },
+    "soside-frontend": {
+      "root": "soside-frontend",
+      "framework": "nextjs",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "soside-backend",
+          "format": "url",
+          "env": "SOSIDE_BACKEND_URL"
+        }
+      ]
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": { "service": "soside-backend" }
+    },
+    {
+      "source": "/(.*)",
+      "destination": { "service": "soside-frontend" }
+    }
+  ]
+}
