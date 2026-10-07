@@ -55,6 +55,15 @@
         "tsConfigPath": "apps/learning-service/tsconfig.app.json"
       }
     },
+    "platform": {
+      "type": "library",
+      "root": "libs/platform",
+      "entryFile": "index",
+      "sourceRoot": "libs/platform/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/platform/tsconfig.lib.json"
+      }
+    },
     "project-service": {
       "type": "application",
       "root": "apps/project-service",
@@ -79,7 +88,26 @@
       "entryFile": "main",
       "sourceRoot": "apps/soside-backend/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/soside-backend/tsconfig.app.json"
+        "tsConfigPath": "apps/soside-backend/tsconfig.app.json",
+        "webpackConfigPath": "apps/soside-backend/webpack.config.js"
+      }
+    },
+    "store-contracts": {
+      "type": "library",
+      "root": "libs/store-contracts",
+      "entryFile": "index",
+      "sourceRoot": "libs/store-contracts/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/store-contracts/tsconfig.lib.json"
+      }
+    },
+    "store-service": {
+      "type": "application",
+      "root": "apps/store-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/store-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/store-service/tsconfig.app.json"
       }
     }
   }

@@ -23,13 +23,13 @@ export class User {
     @Column({ default: false })
     isVerified: boolean;
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     verificationCode: string | null;
 
     @Column({ default: false })
     isTwoFactorEnabled: boolean;
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     twoFactorSecret: string | null;
 
     @OneToOne(() => Profile, (profile) => profile.user)

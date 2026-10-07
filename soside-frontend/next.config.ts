@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   
   // Production optimizations
   output: 'standalone',
+
+  // Allow Turbopack (Next.js 16 default) alongside webpack config
+  turbopack: {},
   
   // Use webpack instead of Turbopack for better compatibility
   webpack: (config, { isServer }) => {

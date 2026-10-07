@@ -9,68 +9,28 @@ import { CommunityController } from './controllers/community.controller';
 import { RecruitmentController } from './controllers/recruitment.controller';
 import { UserController } from './controllers/user.controller';
 import { AIController } from './controllers/ai.controller';
+import { AuthController } from './controllers/auth.controller';
+import { StoreController } from './controllers/store.controller';
+import { StoreAdminController } from './controllers/store-admin.controller';
+import { MonolithModule } from './monolith.module';
+import { SERVICE_CLIENTS } from './service-clients';
+
+const monolith = process.env.GATEWAY_MODE === 'monolith';
+
+// Par défaut : un client Redis par microservice (docker-compose). En mode monolithe : services chargés en mémoire.
+const redisClients = ClientsModule.register(
+  SERVICE_CLIENTS.map((name) => ({
+    name,
+    transport: Transport.REDIS as const,
+    options: {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: parseInt(process.env.REDIS_PORT || '6379'),
+    },
+  })),
+);
 
 @Module({
-  imports: [
-    ClientsModule.register([
-      {
-        name: 'AUTH_SERVICE',
-        transport: Transport.REDIS,
-        options: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-      },
-      {
-        name: 'PROJECT_SERVICE',
-        transport: Transport.REDIS,
-        options: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-      },
-      {
-        name: 'BLOG_SERVICE',
-        transport: Transport.REDIS,
-        options: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-      },
-      {
-        name: 'LEARNING_SERVICE',
-        transport: Transport.REDIS,
-        options: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-      },
-      {
-        name: 'COMMUNITY_SERVICE',
-        transport: Transport.REDIS,
-        options: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-      },
-      {
-        name: 'AI_SERVICE',
-        transport: Transport.REDIS,
-        options: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-      },
-      {
-        name: 'RECRUITMENT_SERVICE',
-        transport: Transport.REDIS,
-        options: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT || '6379'),
-        },
-      },
-    ]),
-  ],
+  imports: [monolith ? MonolithModule : redisClients],
   controllers: [
     AppController,
     ProjectServiceController,
@@ -80,6 +40,9 @@ import { AIController } from './controllers/ai.controller';
     RecruitmentController,
     UserController,
     AIController,
+    AuthController,
+    StoreController,
+    StoreAdminController,
   ],
   providers: [AppService],
 })

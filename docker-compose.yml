@@ -137,6 +137,31 @@ services:
     networks:
       - soside-network
 
+  store-service:
+    build:
+      context: ./soside-backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: store-service
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${POSTGRES_USER:-soside_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-soside_password}
+      - DB_NAME=${POSTGRES_DB:-soside_db}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - STORE_CITIES=${STORE_CITIES:-Goma,Bukavu,Uvira}
+      - STORE_SHIPPING_FEE=${STORE_SHIPPING_FEE:-5}
+      - STORE_FREE_SHIPPING_FROM=${STORE_FREE_SHIPPING_FROM:-300}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - soside-network
+
   api-gateway:
     build:
       context: ./soside-backend
@@ -148,6 +173,8 @@ services:
       - PORT=3000
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      # Doit être identique à celui d'auth-service pour vérifier les jetons.
+      - JWT_SECRET=${JWT_SECRET:-super-secret-key}
     depends_on:
       - auth-service
       - blog-service
@@ -156,6 +183,7 @@ services:
       - community-service
       - ai-service
       - recruitment-service
+      - store-service
     networks:
       - soside-network
 

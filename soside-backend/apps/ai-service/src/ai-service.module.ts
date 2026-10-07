@@ -1,26 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AiServiceController } from './ai-service.controller';
-import { AiServiceService } from './ai-service.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AIPromptLog } from './ai-prompt-log.entity';
-import { AutomationWorkflow } from './automation-workflow.entity';
-import { AgentSkill } from './agent-skill.entity';
+import { databaseOptions } from '@app/platform';
+import { AiCoreModule, AI_ENTITIES } from './ai-core.module';
 
+// Microservice autonome (Redis), avec sa propre connexion.
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      username: process.env.DB_USER || 'soside_user',
-      password: process.env.DB_PASSWORD || 'soside_password',
-      database: process.env.DB_NAME || 'soside_db',
-      entities: [AIPromptLog, AutomationWorkflow, AgentSkill],
-      synchronize: true,
-    }),
-    TypeOrmModule.forFeature([AIPromptLog, AutomationWorkflow, AgentSkill]),
-  ],
-  controllers: [AiServiceController],
-  providers: [AiServiceService],
+  imports: [TypeOrmModule.forRoot(databaseOptions(AI_ENTITIES)), AiCoreModule],
 })
 export class AiServiceModule { }
